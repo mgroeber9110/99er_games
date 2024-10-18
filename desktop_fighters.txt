@@ -1,0 +1,171 @@
+  100 CALL CLEAR  :: RANDOMIZE  :: CALL SCREEN ( 5 )  :: CALL MAGNIFY ( 3 ) 
+  110 DIM SY ( 14 , 1 ) , FL ( 1 , 15 , 1 ) , FS$ ( 1 , 15 ) , FC$ ( 15 ) , FC ( 1 ) , PC ( 1 ) 
+  120 FOR A = 40 TO 90  :: CALL CHARPAT ( A , A$ )  :: CALL CHAR ( A , SEG$ ( A$ , 3 , 14 ) )  :: NEXT A 
+  130 FOR A = 97 TO 122  :: CALL CHARPAT ( A , A$ )  :: CALL CHAR ( A , SEG$ ( A$ , 5 , 12 ) & "00FF" )  :: NEXT A 
+  140 CALL CHAR ( 123 , "80BFBFBFBFBF80BFBFBFBFBF80E0E0FF03FBFBF9F9F901F9F9F9F9F9010101FF" , 127 , "FF00FF00FF00FF" ) 
+  150 CALL CHAR ( 128 , "FF0000000000FF0000000000FFFFFF004040404040404040" & RPT$ ( "06" , 8 ) ) 
+  160 CALL CHAR ( 64 , RPT$ ( "F" , 16 ) , 38 , "FFB7B7B7B7B7FF" , 39 , "FFEDEDEDEDEDFF" , 96 , RPT$ ( "0" , 14 ) & "FF" , 140 , "00060F4F06008004" ) 
+  170 CALL CHAR ( 35 , "00FF55010155FF00207EFE7E2000000008FCFEFC08" , 136 , "030D1121404080F08080404021110D03C03008040202010F01010202040830C" ) 
+  180 CALL CHAR ( 42 , "FFF7D5E380E3D5F7" , 59 , "FFFFE7C3C3E7FFFFFFFDE18D01E1FFFFFFBF87B18087FFFFEFBDE18D01E1BFFD" , 63 , "EFBD87B18087FDDF" ) 
+  190 @$ = RPT$ ( CHR$ ( 0 ) , 8 )  :: CALL HCHAR ( 2 , 1 , 127 , 736 ) 
+  200 FOR A = 0 TO 13  :: CALL COLOR ( A , 2 , 15 )  :: NEXT A  :: FOR A = 9 TO 12  :: CALL COLOR ( A , 15 , 2 )  :: NEXT A  :: CALL COLOR ( 14 , 11 , 2 ) 
+  210 CALL YN ( "NEUES SPIEL" , "ALTES SPIEL" , A )  :: IF A = 1 THEN PL = 1  :: GOTO 250
+  220 CALL CLEAR  :: OPEN # 1  : "CS1" , INTERNAL , INPUT , FIXED 128  :: PRINT  : "* READING"  ;  :: INPUT # 1  : PL 
+  230 FOR B = 0 TO 15  :: IF B < 15 THEN INPUT # 1  : SY ( B , 0 ) , SY ( B , 1 ) , 
+  240 INPUT # 1  : FL ( 0 , B , 0 ) , FL ( 0 , B , 1 ) , FL ( 1 , B , 0 ) , FL ( 1 , B , 1 ) , FS$ ( 0 , B ) , FS$ ( 1 , B )  :: NEXT B  :: CLOSE # 1  :: GOTO 290
+  250 FOR PL = 0 TO 14 
+  260 PX = INT ( RND * 26 + 1 )  :: PY = INT ( RND * 20 + 1 )  :: FOR A = 1 TO PL - 1  :: IF SY ( A , 0 ) = PY AND SY ( A , 1 ) = PX THEN 260
+  270 NEXT A  :: SY ( PL , 0 ) = PY  :: SY ( PL , 1 ) = PX  :: NEXT PL 
+  280 FOR PL = 0 TO 1  :: FOR A = 0 TO 1  :: FS$ ( PL , A ) = "K}ZnP2t<"  :: FL ( PL , A , 1 ) = PL * 25 + 1  :: FL ( PL , A , 0 ) = A * 19 + 1  :: NEXT A  :: NEXT PL  :: PL = 1 
+  290  ! ON ERROR 1500
+  300 PL = 1 - PL  :: DISPLAY AT ( 1 , 1 ) SIZE ( 28 )  : "SPIELER "  ; CHR$ ( 65 + PL )  ; TAB ( 26 )  ; CHR$ ( 60 + PL ) 
+  310 QY = 9  :: QX = 13  :: NC = - 1  :: CALL HCHAR ( 2 , 1 , 127 , 736 ) 
+  320 CALL WIN ( "&kommandos'" , " " , 5 , 7 , 20 , 23 )  :: CALL D ( 7 , 9 , "FLOTTENKURSE" )  :: CALL D ( 9 , 9 , "FLOTTEN TEILEN" ) 
+  330 CALL D ( 11 , 9 , "STATUSREPORT" )  :: CALL D ( 13 , 9 , "KARTE" )  :: CALL D ( 15 , 9 , "SCHIFFSBUCH" ) 
+  340 CALL D ( 17 , 9 , "ZUG BEENDEN" )  :: CALL CHO ( 7 , 8 , 6 , CH , 19 , 10 ) 
+  350 IF CH < 6 THEN ON CH GOSUB 1070, 840, 980, 830, 1190 :: GOTO 320
+  360 IF NOT NC THEN TT$ = "flug"  :: GOSUB 1310
+  370 FOR FP = 0 TO 15  :: G = 59 
+  380 IF FS$ ( PL , FP ) = "" THEN 730
+  390 IF SEG$ ( FS$ ( PL , FP ) , 9 , 1 ) = "*" THEN FS$ ( PL , FP ) = SEG$ ( FS$ ( PL , FP ) , 1 , 8 ) 
+  400 IF NC OR FC$ ( FP ) = "" THEN 730
+  410 A$ = FC$ ( FP )  :: K = ASC ( SEG$ ( A$ , LEN ( A$ ) , 1 ) )  :: FC$ ( FP ) = SEG$ ( A$ , 1 , LEN ( A$ ) - 1 )  :: GOSUB 1490
+  420 Y1 = FL ( PL , FP , 0 ) + Y  :: X1 = FL ( PL , FP , 1 ) + X  :: CALL GCHAR ( Y1 + 3 , X1 + 3 , A )  :: CALL VCHAR ( Y1 + 3 , X1 + 3 , 60 + PL - 2 * ( A > 139 ) )  :: CALL VCHAR ( Y1 - Y + 3 , X1 - X + 3 , G ) 
+  430 FL ( PL , FP , 0 ) = Y1  :: FL ( PL , FP , 1 ) = X1  :: G = A  :: IF G = 64 THEN 400
+  440 FOR A = 0 TO 15  :: IF FL ( PL , A , 0 ) = Y1 AND FL ( PL , A , 1 ) = X1 AND A < > FP AND FC$ ( A ) = "" AND FC$ ( FP ) = "" AND FS$ ( PL , A ) > "" THEN 480
+  450 IF FL ( 1 - PL , A , 0 ) = Y1 AND FL ( 1 - PL , A , 1 ) = X1 AND FS$ ( 1 - PL , A ) > "" THEN 500
+  460 NEXT A 
+  470 GOTO 400
+  480 FOR Y = 1 TO 8  :: CALL I ( FS$ ( PL , A ) , ASC ( SEG$ ( FS$ ( PL , A ) , Y , 1 ) ) + ASC ( SEG$ ( FS$ ( PL , FP ) , Y , 1 ) ) , Y )  :: NEXT Y 
+  490 FS$ ( PL , FP ) = ""  :: GOTO 730
+  500 X = 1 - PL  :: CALL WIN ( "&alarm'" , " " , 5 , 4 , 21 , 25 )  :: CALL M ( 7 , "FEINDSCHIFFE IN" )  :: CALL M ( 8 , "REICHWEITE!" ) 
+  510 CALL M ( 9 , "ZIELE WAEHLEN!" )  :: A$ = FS$ ( PL , FP )  :: B$ = FS$ ( X , A )  :: C$ = ""  :: FOR Y = 1 TO 8 
+  520 IF ASC ( SEG$ ( B$ , Y , 1 ) ) THEN C$ = C$ & CHR$ ( Y )  :: CALL S ( 10 + LEN ( C$ ) , 17 , Y ) 
+  530 NEXT Y  :: CALL D ( 12 , 8 , "typ" )  :: CALL D ( 15 , 7 , "anzahl" )  :: TA$ = "" 
+  540 FOR Y = 1 TO 8  :: F = ASC ( SEG$ ( A$ , Y , 1 ) )  :: IF F = 0 THEN CH = 0  :: GOTO 560ELSE CALL S ( 13 , 6 , Y )  :: CALL D ( 16 , 8 , STR$ ( F ) & "  " ) 
+  550 CALL CHO ( 11 , 16 , - LEN ( C$ ) , C2 , 20 , 9 )  :: CH = ASC ( SEG$ ( C$ , C2 , 1 ) ) 
+  560 TA$ = TA$ & CHR$ ( CH )  :: NEXT Y  :: CALL WIN ( "&strategie'" , " " , 8 , 2 , 15 , 27 ) 
+  570 CALL D ( 10 , 4 , "MASSIVER ANGRIFF" )  :: CALL D ( 11 , 4 , ""SCHLAG ZU UND HAU AB"" )  :: CALL D ( 12 , 4 , ""DOGFIGHT"" ) 
+  580 CALL CHO ( 10 , 3 , - 3 , A , 14 , 9 )  :: IF A = 1 THEN P1 = 1  :: P2 = 9  :: P3 = 7 ELSE IF A = 2 THEN P1 = 5  :: P2 = 9  :: P3 = 5 ELSE P1 = 9  :: P2 = 5  :: P3 = 2 
+  590 CALL WIN ( "&kampfbericht'" , " " , 6 , 3 , 19 , 26 ) 
+  600 CALL D ( 8 , 16 , "`" & CHR$ ( PL + 97 ) & "`   `" & CHR$ ( X + 97 ) & "`" )  :: FOR Y = 1 TO 8  :: CALL S ( 8 + Y , 5 , Y )  :: NEXT Y 
+  610 FOR Y = 1 TO 8  :: DISPLAY AT ( 8 + Y , 16 ) SIZE ( 9 )  : USING "###   ###"  : ASC ( SEG$ ( A$ , Y , 1 ) ) , ASC ( SEG$ ( B$ , Y , 1 ) )  :: NEXT Y  :: IF A$ = @$ OR B$ = @$ THEN 690
+  620 FOR Y = 1 TO 8  :: IF A$ = @$ OR B$ = @$ THEN 610
+  630 X = ASC ( SEG$ ( TA$ , Y , 1 ) )  :: N1 = ASC ( SEG$ ( A$ , Y , 1 ) )  :: IF X = 0 OR N1 = 0 THEN 680ELSE N2 = ASC ( SEG$ ( B$ , X , 1 ) )  :: IF N2 THEN 650
+  640 X = INT ( RND * 8 + 1 )  :: N2 = ASC ( SEG$ ( B$ , X , 1 ) )  :: IF N2 = 0 THEN 640ELSE CALL I ( TA$ , X , Y ) 
+  650 CALL P ( Y , P1 , P2 , P3 )  :: CALL P ( X , D1 , D2 , D3 ) 
+  660 L2 = P1 * F1 + P2 * F2 + P3 * F3  :: L1 = D1 * F1 + D2 * F2 + D3 * F3  :: L2 = L2 * L2 * L2 / ( 5E5 * ( RND + 2.5 ) )  :: L1 = L1 * L1 * L1 / ( 5E5 * ( RND + 3 ) ) 
+  670 CALL I ( B$ , MAX ( 0 , N2 - L2 * N1 ) , X )  :: CALL I ( A$ , MAX ( 0 , N1 - L1 * N2 ) , Y ) 
+  680 NEXT Y  :: GOTO 610
+  690 IF A$ = @$ THEN A$ = "" 
+  700 IF B$ = @$ THEN B$ = "" 
+  710 FS$ ( PL , FP ) = A$  :: FS$ ( 1 - PL , A ) = B$  :: FC$ ( FP ) = "" 
+  720 CALL WKEY ( 18 , 19 )  :: GOSUB 1310 :: GOTO 400
+  730 NEXT FP 
+  740 GOSUB 1450 :: IF PC ( PL ) < 15 AND FC ( 1 - PL ) > 0 THEN 780
+  750 A$ = CHR$ ( 65 + PL )  :: CALL WIN ( "&spielende'" , " " , 8 , 3 , 15 , 26 )  :: CALL M ( 10 , "SPIELER " & A$ & " HAT" ) 
+  760 CALL M ( 12 , "GEWONNEN!" )  :: CALL WKEY ( 14 , 11 ) 
+  770 CALL CLEAR  :: END 
+  780 IF FC ( PL ) = 0 THEN PL = 1 - PL  :: GOTO 750
+  790 CALL YN ( "WEITER" , "ABSPEICHERN" , A )  :: IF A = 1 THEN 300
+  800 CALL CLEAR  :: OPEN # 1  : "CS1" , INTERNAL , OUTPUT , FIXED 128  :: PRINT  : "* WRITING"  ;  :: PRINT # 1  : PL 
+  810 FOR B = 0 TO 15  :: IF B < 15 THEN PRINT # 1  : SY ( B , 0 ) , SY ( B , 1 ) , 
+  820 PRINT # 1  : FL ( 0 , B , 0 ) , FL ( 0 , B , 1 ) , FL ( 1 , B , 0 ) , FL ( 1 , B , 1 ) , FS$ ( 0 , B ) , FS$ ( 1 , B )  :: NEXT B  :: CLOSE # 1  :: GOTO 300
+  830 TT$ = "karte"  :: GOSUB 1310 :: CALL WKEY ( 24 , 11 )  :: RETURN 
+  840 FOR F = 0 TO 15  :: IF FS$ ( PL , F ) = "" THEN GOSUB 1370 :: IF A = - 1 THEN RETURN ELSE IF SEG$ ( FS$ ( PL , A ) , 9 , 1 ) = "*" THEN 970ELSE 860
+  850 NEXT F  :: GOTO 970
+  860 FOR Y1 = QY - 1 TO QY + 1  :: FOR X1 = QX - 1 TO QX + 1  :: IF X1 > 0 AND Y1 > 0 AND X1 < 27 AND Y1 < 21 THEN 880
+  870 NEXT X1  :: NEXT Y1  :: GOTO 970
+  880 FOR FP = 0 TO 1  :: FOR K = 0 TO 15  :: IF FL ( FP , K , 0 ) = Y1 AND FL ( FP , K , 1 ) = X1 AND FS$ ( FP , A ) > "" THEN 870
+  890 NEXT K  :: NEXT FP 
+  900 CALL WIN ( "&flotte`teilen'" , " " , 6 , 3 , 19 , 26 )  :: C$ = "### 0"  :: GOSUB 1180
+  910 CALL D ( 16 , 5 , "fertig" )  :: B$ = @$  :: C$ = FS$ ( PL , A ) 
+  920 CALL CHO ( 8 , 4 , - 9 , CH , 18 , 9 )  :: IF CH = 9 THEN 950
+  930 ACCEPT AT ( 7 + CH , 22 ) SIZE ( - 3 ) VALIDATE ( DIGIT )  : A$  :: X = VAL ( "0" & A$ )  :: V = ASC ( SEG$ ( FS$ ( PL , A ) , CH , 1 ) )  :: IF X > V THEN 930
+  940 CALL I ( B$ , X , CH )  :: CALL I ( C$ , V - X , CH )  :: DISPLAY AT ( 7 + CH , 18 ) SIZE ( 3 )  : USING "###"  : V - X  :: GOTO 920
+  950 IF B$ = @$ THEN RETURN ELSE FS$ ( PL , F ) = B$ & "*"  :: FL ( PL , F , 0 ) = Y1  :: FL ( PL , F , 1 ) = X1  :: IF C$ = @$ THEN C$ = "" 
+  960 FS$ ( PL , A ) = C$  :: RETURN 
+  970 CALL ER ( "FLOTTENTEILUNG" , "NICHT MOEGLICH!" )  :: RETURN 
+  980 CALL WIN ( "&statusreport'" , " " , 7 , 4 , 16 , 25 ) 
+  990 CALL D ( 9 , 6 , "STAND" )  :: CALL D ( 11 , 6 , "FLOTTENINFOS" )  :: CALL D ( 13 , 6 , "KOMMANDO" ) 
+ 1000 CALL CHO ( 9 , 5 , 3 , CH , 15 , 11 )  :: IF CH = 3 THEN RETURN 
+ 1010 IF CH = 2 THEN 1050
+ 1020 CALL WIN ( "stand" , " " , 15 , 13 , 22 , 26 )  :: GOSUB 1450 :: CALL D ( 17 , 14 , "FLOTTEN:a`" & STR$ ( FC ( 0 ) ) ) 
+ 1030 CALL D ( 18 , 22 , "b`" & STR$ ( FC ( 1 ) ) )  :: CALL D ( 19 , 14 , "SYSTEME:a`" & STR$ ( PC ( 0 ) ) )  :: CALL D ( 20 , 22 , "b`" & STR$ ( PC ( 1 ) ) ) 
+ 1040 CALL WKEY ( 21 , 14 )  :: GOTO 980
+ 1050 GOSUB 1370 :: IF A = - 1 THEN 980ELSE CALL WIN ( "infos`flotte`" & CHR$ ( A + 97 ) , " " , 5 , 3 , 17 , 26 ) 
+ 1060 CALL D ( 7 , 7 , "typ      anzahl" )  :: C$ = "###"  :: GOSUB 1180 :: CALL WKEY ( 16 , 18 )  :: GOTO 980
+ 1070 DM = 1  :: GOSUB 1370 :: IF A = - 1 THEN RETURN 
+ 1080 F = A  :: SP = 9  :: FOR A = 1 TO 8  :: CALL P ( A , F1 , F2 , F3 )  :: IF ASC ( SEG$ ( FS$ ( PL , F ) , A , 1 ) ) THEN SP = MIN ( SP , F1 ) 
+ 1090 NEXT A  :: DISPLAY AT ( 3 , 6 ) SIZE ( 18 )  : "kurs`programmieren" 
+ 1100 A$ = "*"  :: B$ = ""  :: PY = FL ( PL , F , 0 ) + 3  :: PX = FL ( PL , F , 1 ) + 3 
+ 1110 CALL GCHAR ( PY , PX , G )  :: B = G + 42 
+ 1120 G = B - G  :: CALL VCHAR ( PY , PX , G )  :: FOR A = 1 TO 10  :: CALL KEY ( 3 , K , S )  :: IF S = 1 THEN 1140
+ 1130 NEXT A  :: GOTO 1120
+ 1140 IF K = 13 THEN CALL T  :: CALL VCHAR ( PY , PX , 42 )  :: FC$ ( F ) = SEG$ ( A$ , 1 , LEN ( A$ ) - 1 )  :: NC = 0  :: RETURN ELSE GOSUB 1490 :: IF X = 0 AND Y = 0 THEN 1120
+ 1150 X1 = PX + X  :: Y1 = PY + Y  :: IF X1 < 4 OR X > 29 OR Y1 < 4 OR Y1 > 23 THEN 1120
+ 1160 A = K  :: K = ASC ( A$ )  :: GOSUB 1490 :: IF X1 + X = PX AND Y1 + Y = PY THEN CALL VCHAR ( PY , PX , B - 42 )  :: G = ASC ( B$ )  :: B = G + 42  :: A$ = SEG$ ( A$ , 2 , 9 )  :: B$ = SEG$ ( B$ , 2 , 9 )  :: PX = X1  :: PY = Y1  :: GOTO 1120
+ 1170 IF LEN ( B$ ) < SP THEN CALL VCHAR ( PY , PX , 59 )  :: PX = X1  :: PY = Y1  :: A$ = CHR$ ( A ) & A$  :: B$ = CHR$ ( B - 42 ) & B$  :: GOTO 1110ELSE 1120
+ 1180 FOR Y = 1 TO 8  :: CALL S ( 7 + Y , 5 , Y )  :: DISPLAY AT ( 7 + Y , 18 ) SIZE ( LEN ( C$ ) )  : USING C$  : ASC ( SEG$ ( FS$ ( PL , A ) , Y , 1 ) )  :: NEXT Y  :: RETURN 
+ 1190 SH = 1  :: RESTORE 1510 :: CALL WIN ( "&schiffsbuch'" , " " , 14 , 2 , 22 , 27 ) 
+ 1200 CALL D ( 16 , 3 , "typ:" )  :: CALL D ( 18 , 7 , "MAX.GESCHW." )  :: CALL D ( 19 , 7 , "BEWAFFNUNG" ) 
+ 1210 CALL D ( 20 , 7 , "PANZERUNG" )  :: CALL WIN ( "" , " " , 18 , 3 , 21 , 6 )  :: CALL D ( 21 , 11 , "$S D% enter ENDE" ) 
+ 1220 READ B$ , CH$  :: CALL CHAR ( 92 , CH$ )  :: CALL P ( SH , F1 , F2 , F3 )  :: CALL S ( 16 , 7 , SH )  :: DISPLAY AT ( 17 , 3 ) SIZE ( 24 )  : B$ 
+ 1230 CALL D ( 19 , 4 , "\^" )  :: CALL D ( 20 , 4 , "]_" ) 
+ 1240 DISPLAY AT ( 18 , 18 ) SIZE ( 9 )  : RPT$ ( "#" , F1 )  :: DISPLAY AT ( 19 , 18 ) SIZE ( 9 )  : RPT$ ( "#" , F2 )  :: DISPLAY AT ( 20 , 18 ) SIZE ( 9 )  : RPT$ ( "#" , F3 ) 
+ 1250 CALL KEY ( 3 , K , S )  :: IF S = 0 THEN 1250
+ 1260 IF K = 68 AND SH < 8 THEN SH = SH + 1  :: GOTO 1220ELSE IF K = 68 THEN SH = 1  :: RESTORE  :: GOTO 1220
+ 1270 IF K < > 83 THEN 1300
+ 1280 IF SH > 1 THEN SH = SH - 1 ELSE SH = 8 
+ 1290 RESTORE 1510 :: FOR A = 2 TO SH  :: READ B$ , CH$  :: NEXT A  :: GOTO 1220
+ 1300 IF K < > 13 THEN 1250ELSE RETURN 
+ 1310 CALL WIN ( TT$ , "@" , 3 , 1 , 24 , 28 ) 
+ 1320 FOR A = 0 TO 14  :: CALL VCHAR ( SY ( A , 0 ) + 3 , SY ( A , 1 ) + 3 , 140 )  :: NEXT A 
+ 1330 FOR X1 = 0 TO 1  :: FOR A = 0 TO 15  :: IF FS$ ( X1 , A ) = "" THEN 1360
+ 1340 Y = FL ( X1 , A , 0 ) + 3  :: X = FL ( X1 , A , 1 ) + 3  :: IF DM AND X1 = PL AND FC$ ( A ) > "" THEN B = 42 ELSE CALL GCHAR ( Y , X , G )  :: B = 60 + X1 - 2 * ( G = 140 ) 
+ 1350 CALL VCHAR ( Y , X , B ) 
+ 1360 NEXT A  :: NEXT X1  :: DM = 0  :: RETURN 
+ 1370 TT$ = "&flotte`waehlen'"  :: GOSUB 1310
+ 1380 CALL SPRITE ( # 1 , 136 , 8 , 13 + QY * 8 , 13 + QX * 8 ) 
+ 1390 CALL KEY ( 5 , K , S )  :: IF S = 0 THEN 1390ELSE IF K = 13 THEN CALL DELSPRITE ( # 1 )  :: CALL T  :: GOTO 1430
+ 1400 IF K > 128 AND K < 145 THEN A = K - 129  :: IF FS$ ( PL , A ) > "" THEN QX = FL ( PL , A , 1 )  :: QY = FL ( PL , A , 0 )  :: CALL LOCATE ( # 1 , 13 + QY * 8 , 13 + QX * 8 )  :: GOTO 1390
+ 1410 GOSUB 1490 :: IF X = 0 AND Y = 0 THEN 1390
+ 1420 IF QX + X < 1 OR QX + X > 26 OR QY + Y < 1 OR QY + Y > 20 THEN 1380ELSE QX = QX + X  :: QY = QY + Y  :: GOTO 1380
+ 1430 FOR A = 0 TO 15  :: IF FL ( PL , A , 0 ) = QY AND FL ( PL , A , 1 ) = QX AND FS$ ( PL , A ) > "" THEN RETURN 
+ 1440 NEXT A  :: A = - 1  :: CALL ER ( "IN DIESEM SEKTOR IST" , "KEINE IHRER FLOTTEN!" )  :: RETURN 
+ 1450 FOR FP = 0 TO 1  :: FC ( FP ) , PC ( FP ) = 0  :: FOR F = 0 TO 15 
+ 1460 IF FS$ ( FP , F ) > "" THEN FC ( FP ) = FC ( FP ) + 1 ELSE 1480
+ 1470 FOR A = 0 TO 14  :: PC ( FP ) = PC ( FP ) - ( SY ( A , 0 ) = FL ( FP , F , 0 ) AND SY ( A , 1 ) = FL ( FP , F , 1 ) )  :: NEXT A 
+ 1480 NEXT F  :: NEXT FP  :: RETURN 
+ 1490 Y = ( K = 87 OR K = 69 OR K = 82 ) - ( K = 90 OR K = 88 OR K = 67 )  :: X = ( K = 87 OR K = 83 OR K = 90 ) - ( K = 82 OR K = 68 OR K = 67 )  :: RETURN 
+ 1500 ON ERROR 1500 :: RETURN 300
+ 1510 DATA SCHWERER RAUMFRACHTER , 00000000000003050A1827271F070100000000063EFE0F214393278EFC98906 
+ 1520 DATA KLEINER JAEGER , 00C0606070303F2A557FC60000000000000000000000C038FF8 
+ 1530 DATA RUBINLASERKANONE , 081C08040305080C0A3B47FF45390F0000041A26CC78B0F0F0F0F8FCF8F0C 
+ 1540 DATA KAMPFSATELLIT , 0000100B060F101110160D0B17182000000106DA243C3878F8F8F8F8C402 
+ 1550 DATA RAUMAUFKLAERER , 000000000C1277FFFF7F1E7C6040000000307F3F1D3FD1F7F7F73F113F7F6 
+ 1560 DATA SCHWERER KREUZER , 000000000E172B377F7FFFFFFC7C1F0F00000000F8C0C0F0F8FEFFF1FEF8F0C 
+ 1570 DATA BEGLEITSCHIFF , 0000037E39498B40310F0301010102000000C060FCFEFFBE5CF0C08080804 
+ 1580 DATA KURIERSCHIFF , 805F2A747A7D6E47030103130B070303000000100804BF41FFD5EABCF8D0E0C 
+ 1590 SUB S ( Y , X , S )  :: CALL D ( Y , X , SEG$ ( "RX-192  HORNET  T-18    STINGER V-7B    COSMO-7 VEGA    FIREBIRD" , S * 8 - 7 , 8 ) )  :: SUBEND 
+ 1600 SUB P ( N , A , B , C )  :: A = VAL ( SEG$ ( "38157279" , N , 1 ) )  :: B = VAL ( SEG$ ( "35863954" , N , 1 ) )  :: C = VAL ( SEG$ ( "82615934" , N , 1 ) )  :: SUBEND 
+ 1610 SUB WIN ( N$ , S$ , Y , X , Y2 , X2 )  :: WW = X2 - X + 1  :: WB$ = CHR$ ( 124 ) & RPT$ ( CHR$ ( 129 ) , WW - 2 ) & "~" 
+ 1620 L1 = INT ( ( WW - 2 - LEN ( N$ ) ) / 2 )  :: WT$ = "{" & RPT$ ( CHR$ ( 128 ) , L1 ) & N$ & RPT$ ( CHR$ ( 128 ) , WW - 2 - LEN ( N$ ) - L1 ) & "}" 
+ 1630 WS$ = CHR$ ( 130 ) & RPT$ ( S$ , WW - 2 ) & CHR$ ( 131 )  :: DISPLAY AT ( Y , X ) SIZE ( WW )  : WT$ 
+ 1640 FOR A = Y + 1 TO Y2 - 1  :: DISPLAY AT ( A , X ) SIZE ( WW )  : WS$  :: DISPLAY AT ( A + 1 , X ) SIZE ( WW )  : WB$  :: NEXT A 
+ 1650 SUBEND 
+ 1660 SUB CHO ( Y , X , N , C , A , B )  :: CALL D ( A , B , "$S D% enter" )  :: A = 2 + ( N < 0 )  :: N = ABS ( N )  :: Z = Y  :: C = 1  :: CALL VCHAR ( Y , X + 2 , 32 , N * A ) 
+ 1670 CALL D ( Z , X , "%" ) 
+ 1680 CALL KEY ( 3 , K , S )  :: IF S < 1 THEN 1680ELSE IF K = 13 THEN CALL T  :: CALL D ( Z , X , "`" )  :: SUBEXIT 
+ 1690 IF K = 68 OR K = 83 THEN CALL D ( Z , X , " " )  :: IF K = 68 THEN C = C + 1 + N * ( C = N ) ELSE C = C - 1 - N * ( C = 1 ) 
+ 1700 Z = Y + A * ( C - 1 )  :: GOTO 1670
+ 1710 SUBEND 
+ 1720 SUB WKEY ( Y , X )  :: CALL D ( Y , X , "`taste`" ) 
+ 1730 CALL KEY ( 0 , K , S )  :: IF S < 1 THEN 1730
+ 1740 SUBEND 
+ 1750 SUB D ( Y , X , A$ )  :: DISPLAY AT ( Y , X ) SIZE ( LEN ( A$ ) )  : A$  :: SUBEND 
+ 1760 SUB M ( Y , A$ )  :: CALL D ( Y , 15 - LEN ( A$ ) / 2 , A$ )  :: SUBEND 
+ 1770 SUB I ( A$ , C , P )  :: A$ = SEG$ ( A$ , 1 , P - 1 ) & CHR$ ( INT ( C ) ) & SEG$ ( A$ , P + 1 , 9 )  :: SUBEND 
+ 1780 SUB T  :: CALL SOUND ( 9 , 999 , 4 )  :: SUBEND 
+ 1790 SUB YN ( A$ , B$ , R )  :: CALL WIN ( "" , " " , 4 , 8 , 11 , 22 )  :: CALL D ( 6 , 10 , A$ )  :: CALL D ( 8 , 10 , B$ )  :: CALL CHO ( 6 , 9 , 2 , R , 10 , 10 )  :: SUBEND 
+ 1800 SUB ER ( A$ , B$ )  :: CALL WIN ( "fehler" , " " , 9 , 3 , 16 , 26 )  :: CALL M ( 11 , A$ )  :: CALL M ( 13 , B$ )  :: CALL WKEY ( 15 , 12 )  :: SUBEND 

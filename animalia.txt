@@ -1,0 +1,165 @@
+   10 CALL CLEAR  :: CALL SCREEN ( 2 ) 
+   11 DEF INA ( N ) = SGN ( N ) * INT ( ABS ( N ) )  :: DEF INR ( N ) = SGN ( N ) * INT ( ABS ( N ) + .5 ) 
+   18 DIM PX ( 9 , 2 ) , EP ( 15 ) , W ( 3 ) , EQ ( 4 ) , AN ( 9 ) , LG ( 1 ) , FR ( 1 ) 
+   20 READ A , B  :: IF A < 1 THEN 60
+   30 FOR C = A TO B  :: READ C$  :: CALL CHAR ( C , C$ )  :: NEXT C  :: GOTO 20
+   60 CALL CHAR ( 59 , "0008080808080800" , 91 , "000087A9C9A7A1AE" , 93 , "00020103D1AAA8A8" , 35 , "3C4299A1A199423C3C42A58181A4423C" ) 
+   90 GE = 1E5  :: TA = 1E3  :: HE = TA  :: SL , SH , NG = 1  :: LG ( 0 ) = 25  :: SP = 3  :: XXX = 5  :: YYY = 3  :: YY = 50002  :: XX = 49990 
+   95 GOSUB 10500 :: GOSUB 2600
+   96 FOR A = 0 TO 14  :: CALL COLOR ( A , 1 , 1 )  :: NEXT A  :: CALL VCHAR ( 1 , 1 , 31 , 768 ) 
+  100 CALL BOX ( 1 , 2 , 14 , 15 , 136 )  :: CALL BOX ( 1 , 17 , 7 , 31 , 32 )  :: CALL BOX ( 9 , 18 , 13 , 22 , 32 )  :: CALL BOX ( 10 , 24 , 21 , 31 , 32 ) 
+  120 CALL BOX ( 16 , 2 , 24 , 19 , 32 )  :: GOSUB 10010 :: GOSUB 10200 :: GOSUB 10400 :: CALL D ( 11 , 23 , "HELIUM" )  :: CALL D ( 13 , 23 , "GELD" )  :: CALL D ( 12 , 28 , "[" ) 
+  130 CALL D ( 15 , 23 , "LADE-" )  :: CALL D ( 16 , 23 , "RAUM" )  :: CALL D ( 17 , 28 , "]" )  :: CALL D ( 18 , 23 , "CON-" )  :: CALL D ( 19 , 23 , "TAINER" )  :: CALL D ( 20 , 28 , "]" ) 
+  160 CALL BOX ( 15 , 21 , 24 , 22 , 32 )  :: CALL D ( 16 , 18 , "+" )  :: CALL D ( 23 , 18 , "-" )  :: A = DR  :: GOSUB 10420
+  250 GOSUB 10500 :: CALL SPRITE ( # 1 , 36 , 5 , 51 , 61 )  :: IF NG THEN 3042ELSE GOSUB 10300 :: IF CX OR CY THEN CALL D ( 11 + CY , 18 + CX , CC$ ) 
+  300 CALL C  :: CALL D ( 18 , 2 , "KURS" )  :: CALL D ( 19 , 2 , "ABSPEICHERN" )  :: CALL D ( 20 , 2 , "TRIEBWERKE" )  :: IF OB THEN CALL D ( 21 , 2 , "LANDUNG" ) 
+  320 CALL CHO ( 18 , 3 , 3 + OB , CH )  :: CALL C  :: ON CH GOTO 2000, 2500, 3000, 4000
+ 2000 D$ = "`dbe gafc"  :: FOR Y = - 1 TO 1  :: FOR X = - 1 TO 1  :: Q = Y * 3 + X + 5  :: IF X OR Y THEN CALL D ( 20 + Y * 2 , 4 + X * 2 , CHR$ ( 32 + ASC ( SEG$ ( D$ , Q , 1 ) ) ) ) 
+ 2010 CALL D ( 20 + Y , 4 + X , STR$ ( Q ) )  :: NEXT X  :: NEXT Y  :: CALL D ( 18 , 8 , "S=SCHUB +" )  :: CALL D ( 19 , 8 , "D=SCHUB -" ) 
+ 2020 CALL D ( 21 , 9 , "ENTER=" )  :: CALL D ( 22 , 10 , "EXIT" ) 
+ 2030 CALL KEY ( 0 , K , S )  :: Q = K - 48  :: IF K = 13 THEN IF DR = 0 THEN CX , CY = 0  :: GOSUB 10400 :: GOTO 300ELSE 300
+ 2035 IF K = 68 OR K = 83 THEN A = MIN ( 7 , MAX ( 0 , DR - ( K = 83 ) + ( K = 68 ) ) )  :: GOSUB 10410 :: GOTO 2030ELSE IF Q < 1 OR Q > 9 THEN 2030
+ 2040 CY = INT ( ( Q - 1 ) / 3 ) - 1  :: CX = Q - ( CY + 1 ) * 3 - 2  :: GOSUB 10400 :: CC$ = CHR$ ( 32 + ASC ( SEG$ ( D$ , Q , 1 ) ) )  :: CALL D ( 11 + CY , 18 + CX , CC$ ) 
+ 2045 IF Q = 5 THEN A = 0  :: GOSUB 10410
+ 2050 GOTO 2030
+ 2500 CALL D ( 20 , 2 , "ABSPEICHERN?" )  :: CALL YN ( 20 , 15 , A$ )  :: IF A$ < > "J" THEN 300
+ 2510 CALL DELSPRITE ( ALL )  :: CALL CLEAR  :: CALL BOX ( 22 , 14 , 24 , 19 , 32 )  :: CALL D ( 23 , 13 , "SAVE" ) 
+ 2520 OPEN # 1  : "CS1" , OUTPUT , INTERNAL , FIXED 192 
+ 2530 PRINT # 1  : SL , SH , WT , EQ ( 1 ) , EQ ( 2 ) , EQ ( 3 ) , EQ ( 4 ) , TA , SP  :: FOR A = 1 TO 9  :: PRINT # 1  : AN ( A ) ,  :: NEXT A  :: PRINT # 1  : HE , GE , DR , XX , XXX , YY , YYY 
+ 2540 PRINT # 1  : OB , ST , STP , TS , BAS , BS , OF , HL , HH , AD , CC$ , CX , CY , LG ( 0 ) , FR ( 0 ) , LG ( 1 ) , FR ( 1 )  :: FOR A = 1 TO 15  :: PRINT # 1  : EP ( A ) ,  :: NEXT A 
+ 2590 CLOSE # 1  :: RUN 
+ 2600 CALL D ( 19 , 1 , "ALTES SPIEL LADEN?" )  :: CALL YN ( 19 , 20 , A$ )  :: IF A$ < > "J" THEN RETURN ELSE CALL BOX ( 22 , 14 , 24 , 19 , 32 )  :: CALL D ( 23 , 13 , "LOAD" ) 
+ 2610 NG = 0  :: OPEN # 1  : "CS1" , INPUT , INTERNAL , FIXED 192 
+ 2630 INPUT # 1  : SL , SH , WT , EQ ( 1 ) , EQ ( 2 ) , EQ ( 3 ) , EQ ( 4 ) , TA , SP  :: FOR A = 1 TO 9  :: INPUT # 1  : AN ( A ) ,  :: NEXT A  :: INPUT # 1  : HE , GE , DR , XX , XXX , YY , YYY 
+ 2640 INPUT # 1  : OB , ST , STP , TS , BAS , BS , OF , HL , HH , AD , CC$ , CX , CY , LG ( 0 ) , FR ( 0 ) , LG ( 1 ) , FR ( 1 )  :: FOR A = 1 TO 15  :: INPUT # 1  : EP ( A ) ,  :: NEXT A 
+ 2690 CLOSE # 1  :: GOSUB 10200 :: RETURN 
+ 3000 HE = HE - 12  :: IF CX = 0 AND CY = 0 THEN 3060ELSE X2 = XX  :: Y2 = YY 
+ 3001 HH = INT ( SP * DR * 2.5 )  :: IF HH > = HE THEN CALL M ( 19 , "ZU WENIG HELIUM" )  :: GOTO 3060
+ 3010 CALL M ( 18 , "ZUENDUNG!" )  :: CALL SOUND ( 4200 , - 7 , 4 )  :: A = XXX  :: B = XX  :: C = CX  :: GOSUB 10510 :: CX = C  :: XX = B  :: XXX = A 
+ 3020 A = YYY  :: B = YY  :: C = CY  :: GOSUB 10510 :: CY = C  :: YY = B  :: YYY = A 
+ 3030 HE = HE - HH  :: IF X2 < > XX OR Y2 < > YY THEN GOSUB 10200
+ 3040 CALL SOUND ( - 400 , - 7 , 8 ) 
+ 3042 OB = 0  :: IF XXX < > PX ( 5 , 0 ) OR YYY < > PX ( 5 , 1 ) THEN N$ = ""  :: GOTO 3050ELSE OB = 1 
+ 3045 Q = 0  :: RANDOMIZE YY * 1E5 + XX  :: GOSUB 10100 :: CALL M ( 20 , "EINSCHWENKEN IN" )  :: CALL M ( 21 , "ORBIT UM " & N$ )  :: CALL TONE 
+ 3050 GOSUB 10300
+ 3060  ! 
+ 3900 GOSUB 10000 :: GOTO 300
+ 4000 RANDOMIZE  :: CALL TONE  :: IF BAS = 0 THEN 4500
+ 4005 CALL C  :: CALL M ( 17 , "BASIS AUF " & N$ )  :: CALL D ( 19 , 2 , "TIERMARKT" )  :: CALL D ( 20 , 2 , "DOCKANLAGEN" )  :: GOSUB 4990
+ 4020 CALL CHO ( 19 , 3 , 4 , CH )  :: CALL C  :: ON CH GOTO 4100, 4300, 4025, 300
+ 4025 GOSUB 4030 :: GOTO 4005
+ 4030 CALL M ( 17 , N$ )  :: CALL D ( 18 , 1 , "DURCHM.:" & STR$ ( PS ) & " KM" ) 
+ 4040 CALL D ( 19 , 1 , "OBERFLAECHE:" )  :: CALL D ( 20 , 1 , "ZU " & STR$ ( STP ) & "% " & SEG$ ( "LAND  EIS   WASSERWUESTE" , ST * 6 - 5 , 6 ) ) 
+ 4050 IF BAS THEN CALL D ( 21 , 1 , "TECHNIK:" & SEG$ ( "PRIMITIVMAESSIG FORTSCH." , TS * 8 - 7 , 8 ) ) 
+ 4090 CALL WAIT  :: RETURN 
+ 4100 RESTORE 19700 :: Q = 17  :: B$ = ""  :: FOR B = 6 TO 15 
+ 4105 READ A$ , A , A , A , A , A , A , A , A  :: IF EP ( B ) THEN CALL D ( Q , 1 , A$ )  :: CALL D ( Q , 14 , STR$ ( EP ( B ) ) )  :: Q = Q + 1  :: B$ = B$ & STR$ ( B - 6 ) 
+ 4110 NEXT B  :: CALL D ( Q , 1 , "KAUFE NICHTS" )  :: CALL CHO ( 17 , 15 , Q - 16 , CH )  :: IF CH = Q - 16 THEN 4005
+ 4120 CH = VAL ( SEG$ ( B$ , CH , 1 ) )  :: RESTORE 19700 :: FOR B = 0 TO CH  :: READ A$ , A , A , A , A , Q , X , A , Y  :: NEXT B  :: CALL C  :: CALL M ( 17 , A$ ) 
+ 4150 CALL D ( 21 , 3 , "KAUFEN" )  :: CALL D ( 22 , 3 , "VERKAUFEN" )  :: CALL D ( 23 , 3 , "NICHTS TUN" )  :: CALL CHO ( 21 , 4 , 3 , A )  :: IF A = 3 THEN 4005
+ 4160 IF ( A = 1 AND LG ( Y ) - FR ( Y ) = 0 ) OR ( A = 2 AND AN ( CH ) = 0 ) THEN CALL C  :: CALL M ( 20 , "NICHT MOEGLICH" )  :: GOTO 4005
+ 4165 IF A = 1 THEN B$ = "KAUFEN" ELSE B$ = "VERKAUFEN" 
+ 4170 CALL C  :: CALL D ( 18 , 1 , "WIEVIELE" )  :: CALL D ( 19 , 1 , A$ )  :: CALL D ( 20 , 1 , B$ & " (AN" )  :: CALL D ( 21 , 1 , "BORD:" & STR$ ( AN ( CH ) ) & ")?" ) 
+ 4175 ACCEPT AT ( 22 , 1 ) SIZE ( 5 ) VALIDATE ( NUMERIC )  : A$ 
+ 4180 IF A$ = "" THEN 4005ELSE Q = VAL ( A$ )  :: IF ( A = 1 AND ( EP ( CH + 6 ) * Q > GE OR X * Q > LG ( Y ) - FR ( Y ) ) ) OR ( A = 2 AND Q > AN ( CH ) ) THEN CALL M ( 23 , "FEHLER!" )  :: GOTO 4175
+ 4190 Q = Q * ( ( A = 2 ) * 2 + 1 )  :: FR ( Y ) = FR ( Y ) + X * Q  :: GE = GE - EP ( CH + 6 ) * Q  :: AN ( CH ) = AN ( CH ) + Q  :: GOSUB 10000 :: GOTO 4005
+ 4290 GOTO 4005
+ 4300 IF OP > GE OR OP = 0 THEN 4309ELSE CALL D ( 17 , 5 , "ANGEBOT:" )  :: CALL D ( 19 , 1 , STR$ ( AD ) & "] MEHR LADE-" )  :: CALL D ( 20 , 1 , "RAUM FUER " & STR$ ( OP ) & "." ) 
+ 4301 CALL D ( 22 , 1 , "INTERESSE?" )  :: CALL YN ( 22 , 12 , A$ )  :: IF A$ < > "J" THEN 4309
+ 4302 OP = 0  :: GE = GE - OP  :: SH = HH  :: SL = LL  :: LG ( 0 ) = LG ( 0 ) + AD  :: CALL TONE  :: GOSUB 10010 :: CALL C 
+ 4309 RESTORE 19600 :: Y = 17  :: FOR A = 0 TO 5  :: READ A$ , B , B  :: IF EP ( A ) THEN CALL D ( Y , 1 , A$ )  :: CALL U ( Y + 1 , 6 , EP ( A ) )  :: Y = Y + 2 
+ 4310 IF Y = 23 THEN CALL WAIT  :: CALL C  :: Y = 17 
+ 4320 NEXT A  :: IF Y > 17 THEN CALL WAIT 
+ 4330 RESTORE 19600 :: CALL C  :: A$ = ""  :: Y = 17  :: FOR A = 0 TO 5  :: READ B$ , B , B  :: IF EP ( A ) THEN A$ = A$ & STR$ ( A )  :: CALL D ( Y , 2 , B$ )  :: Y = Y + 1 
+ 4340 NEXT A  :: CALL D ( Y , 2 , "KAUFE NICHTS" )  :: CALL CHO ( 17 , 3 , Y - 16 , CH )  :: CALL C  :: IF CH > LEN ( A$ ) THEN 4005ELSE IF CH > 1 THEN 4350
+ 4341 CALL D ( 19 , 2 , "WIEVIEL HELIUM" )  :: CALL D ( 20 , 2 , "([)?" )  :: ACCEPT AT ( 20 , 7 ) SIZE ( 4 ) VALIDATE ( NUMERIC )  : A$  :: IF A$ = "" THEN 4330ELSE A = VAL ( A$ ) 
+ 4342 IF A * EP ( 0 ) > GE THEN CALL D ( 22 , 1 , "GELD??? " )  :: GOTO 4341ELSE IF HE + A > TA THEN CALL M ( 22 , "ZU VIEL!" )  :: GOTO 4341
+ 4343 GE = GE - EP ( 0 ) * A  :: HE = HE + A  :: GOSUB 10000 :: GOTO 4005
+ 4350 A = VAL ( SEG$ ( A$ , CH , 1 ) )  :: IF A < 5 THEN 4355
+ 4351 CALL D ( 19 , 1 , "WIEVIELE CON-" )  :: CALL D ( 20 , 1 , "TAINER?" )  :: ACCEPT AT ( 20 , 9 ) SIZE ( 2 ) VALIDATE ( NUMERIC )  : A$  :: IF A$ = "" THEN 4330ELSE A = VAL ( A$ ) * 20 
+ 4352 IF A * EP ( 4 ) > GE THEN CALL M ( 22 , "  GELD???  " )  :: GOTO 4351ELSE IF A > LG ( 0 ) - FR ( 0 ) THEN CALL M ( 22 , "KEIN PLATZ!" )  :: GOTO 4351
+ 4353 GE = GE - EP ( 4 ) * A / 20  :: LG ( 0 ) = LG ( 0 ) - A  :: LG ( 1 ) = LG ( 1 ) + A  :: GOSUB 10010 :: GOTO 4005
+ 4355 IF EQ ( A ) THEN CALL M ( 20 , "SCHON EINGEBAUT!" )  :: GOTO 4330ELSE IF EP ( A ) > GE THEN CALL M ( 20 , "GELD???" )  :: GOTO 4330
+ 4356 B = VAL ( SEG$ ( "20602518" , A * 2 - 1 , 2 ) )  :: IF LG ( 0 ) - FR ( 0 ) < B THEN CALL M ( 20 , "KEIN PLATZ!" )  :: GOTO 4330
+ 4360 GE = GE - EP ( A )  :: LG ( 0 ) = LG ( 0 ) - B  :: EQ ( A ) = 1  :: CALL TONE  :: IF A = 1 THEN SP = 10 ELSE IF A = 4 THEN TA = 2E3 
+ 4490 GOSUB 10010 :: GOTO 4005
+ 4500 CALL C  :: CALL M ( 17 , N$ & ",UNBEWOHNT" )  :: CALL D ( 19 , 2 , "FANGEXPEDITION" )  :: CALL D ( 20 , 2 , "BODENSCHAETZE" )  :: GOSUB 4990
+ 4510 CALL CHO ( 19 , 3 , 4 , CH )  :: CALL C  :: ON CH GOTO 4600, 4800, 4520, 300
+ 4520 GOSUB 4030 :: GOTO 4500
+ 4800 IF EQ ( 3 ) = 0 THEN CALL M ( 20 , "KEIN LASER" )  :: GOTO 4830
+ 4810 IF BS = 0 THEN CALL M ( 19 , "KEINE BODEN-" )  :: CALL M ( 20 , "SCHAETZE" )  :: GOTO 4830
+ 4820 CALL M ( 19 , STR$ ( BS ) & "[ HELIUM" )  :: CALL M ( 20 , "GEFUNDEN" )  :: HE = MIN ( TA , HE + BS )  :: GOSUB 10000
+ 4830 CALL WAIT  :: GOTO 4500
+ 4990 CALL D ( 21 , 2 , "INFORMATION" )  :: CALL D ( 22 , 2 , "STARTEN" )  :: RETURN 
+10000 CALL U ( 12 , 23 , HE )  :: DISPLAY AT ( 14 , 23 )  : USING "######"  : GE  :: FOR A = 0 TO 1  :: CALL U ( 17 + 3 * A , 23 , LG ( A ) - FR ( A ) )  :: NEXT A  :: RETURN 
+10010 GOSUB 10000 :: B$ = RPT$ ( "b" , SL )  :: X = 22 - SL / 2  :: C$ = "c" & RPT$ ( "r" , SL - 1 ) & "c" 
+10015 CALL D ( 4 , X - 2 , "tv" )  :: FOR A = 0 TO SH - 1  :: CALL D ( INT ( 4.5 - SH / 2 + A ) , X , "c" & RPT$ ( "r" , SL ) & "c" )  :: NEXT A 
+10020 CALL D ( INT ( 3.5 - SH / 2 ) , X , "d" & B$ & "f" )  :: CALL D ( INT ( 4.5 + SH / 2 ) , X , "e" & B$ & "g" ) 
+10030 CALL D ( 5 , X - 2 , SEG$ ( "  uw" , EQ ( 3 ) * 2 + 1 , 2 ) ) 
+10040 X1 = X + 1  :: Y1 = 0  :: FOR A = 1 TO LG ( 1 ) / 20  :: CALL D ( 3 + SH / 2 - Y1 , X1 , "s" )  :: Y1 = Y1 + 1  :: IF Y1 = SH THEN Y1 = 0  :: X1 = X1 + 1 
+10050 NEXT A  :: IF EQ ( 2 ) THEN CALL D ( 6 , 16 , "`a" ) 
+10060 IF EQ ( 1 ) THEN CALL D ( 4 , X + LEN ( C$ ) - 1 , "pq" ) 
+10090 RETURN 
+10100 IF RND > .75 THEN PS = - 9999  :: RETURN 
+10105 PS = INT ( RND * 24000 + 4000 )  :: X = INT ( RND * 10 )  :: Y = INT ( RND * 10 )  :: IF Q THEN RETURN 
+10110 A = INT ( RND * 4 + 3 )  :: WB = INT ( RND * 2 )  :: VO = 0  :: A$ , N$ = ""  :: FOR B = 1 TO A 
+10130 IF WB = 0 THEN A$ = SEG$ ( "AEIOU" , INT ( RND * 5 + 1 ) , 1 )  :: VO = 1  :: GOTO 10150
+10140 BU = INT ( RND * 18 + 1 )  :: A$ = SEG$ ( "FLMNRSBCDGHJKPTVWZ" , BU , 1 ) 
+10150 N$ = N$ & A$  :: IF BU > 6 OR WB < > 1 OR RND > .5 OR VO = 0 THEN WB = 1 - SGN ( WB ) ELSE WB = WB + 1 
+10160 IF RND > .8 THEN IF VO AND B < A - 1 THEN B = B + 1  :: N$ = N$ & "-"  :: VO = 0 
+10170 NEXT B  :: ST = INT ( RND * 4 + 1 )  :: STP = INT ( RND * 40 + 60 )  :: BAS = 1  :: IF RND > .7 THEN BAS = 0 
+10180 TS = INT ( RND * 3 + 1 )  :: RESTORE 19600 :: FOR B = 0 TO 5  :: READ A$ , A , P  :: IF TS * RND < A OR ( B = 5 AND ST < > 3 AND RND > .25 ) THEN P = 0 
+10181 EP ( B ) = P  :: NEXT B  :: Q = 6  :: FOR B = 6 TO 15  :: READ A$ , W ( 0 ) , W ( 1 ) , W ( 2 ) , W ( 3 ) , A , A , A , A  :: P = 0 
+10182 IF RND > .6 AND Q THEN Q = Q - 1  :: P = W ( ST - 1 )  :: P = P + INT ( RND * P / 3 - P / 6 ) 
+10183 EP ( B ) = P  :: NEXT B 
+10190 RANDOMIZE  :: FOR B = 0 TO 15  :: P = EP ( B )  :: EP ( B ) = P + INT ( RND * P / 5 - P / 10 )  :: NEXT B 
+10191 BS = INT ( RND * 800 + 100 )  :: IF RND > .7 THEN BS = 0 
+10198 IF RND > .8 AND SH < 3 THEN HH = SH - ( SL = 8 )  :: LL = MIN ( 8 , SL + 1 )  :: AD = ( ( HH * LL ) - ( SH * SL ) ) * 25  :: OP = AD * INT ( RND * 40 + 20 ) ELSE OP = 0 
+10199 RETURN 
+10200 FOR YI = - 1 TO 1  :: FOR XI = - 1 TO 1  :: Q = YI * 3 + XI + 5  :: RANDOMIZE ( YY + YI ) * 1E5 + XX + XI  :: GOSUB 10100
+10210 PX ( Q , 0 ) = X  :: PX ( Q , 1 ) = Y  :: PX ( Q , 2 ) = INT ( ( PS - 4000 ) / 6000 )  :: NEXT XI  :: NEXT YI 
+10290 RETURN 
+10300 Q = 0  :: FOR Y = 0 TO 2  :: FOR X = 0 TO 2  :: Q = Q + 1 
+10310 YI = INT ( ( PX ( Q , 1 ) - YYY + 5 ) * 3.2 ) + 2 + Y * 32  :: XI = INT ( ( PX ( Q , 0 ) - XXX + 5 ) * 3.2 ) + 13 + X * 32 
+10311 IF PX ( Q , 2 ) < 0 OR YI < 9 OR YI > 99 OR XI < 25 OR XI > 107 THEN CALL DELSPRITE ( # Q + 1 ) ELSE CALL SPRITE ( # Q + 1 , 140 + PX ( Q , 2 ) , 11 , YI , XI ) 
+10320 NEXT X  :: NEXT Y  :: RETURN 
+10400 CALL D ( 10 , 17 , "\;/" )  :: CALL D ( 11 , 17 , "-$-" )  :: CALL D ( 12 , 17 , "/;\" )  :: RETURN 
+10410 IF A = DR THEN RETURN 
+10420 CALL VCHAR ( 23 - DR , 21 , 104 )  :: CALL VCHAR ( 23 - DR , 22 , 110 )  :: CALL VCHAR ( 23 - A , 21 , 137 )  :: CALL VCHAR ( 23 - A , 22 , 138 )  :: DR = A  :: RETURN 
+10500 CALL COLOR ( 0 , 5 , 5 , 9 , 2 , 13 , 10 , 2 , 15 , 11 , 2 , 13 , 13 , 2 , 13 , 14 , 2 , 15 )  :: FOR A = 1 TO 8  :: CALL COLOR ( A , 8 , 13 )  :: NEXT A  :: RETURN 
+10510 A = INR ( A + C * SP * DR * .14 )  :: B = B + INA ( A / 10 + ( A < 0 ) )  :: A = A - SGN ( A ) * INT ( ABS ( A / 10 + ( A < 0 ) ) ) * 10  :: RETURN 
+19000 DATA 96 , 119 
+19010 DATA 00081B7C8FBF7F1E , 00000207CEFEFE78 , 0000FFABD5FF , D8A8D8A8D8A8D8A8 , 00000F304F93ACA8 , A8AC934F300F , 0000E010C8A8A8A8 , A8A8A8C810E 
+19020 DATA D2AAD2AAD2AAD2AA , D2ABD0AAD56A359F , 00FF00AA55AA55FF , 9F2040A480C8D3AB 
+19030 DATA FF0000000000FFFF , F90402010101C1C1 , C1C1C1C1C1C1C1C1 , C1C109A1418A64B9 
+19040 DATA 003F4040557F3F , 02FD050555FDFD02 , 000000001 , 183C564E564E567E 
+19050 DATA 0001061F7FFFF87F , 01000000003FFF , 00E050890FFF1FFF , FEFC783070B8F8E 
+19200 DATA 128 , 135 
+19210 DATA 007C7870604 , 0000406070787C , 003E1E0E0602 , 000002060E1E3E , 10387CFE , 00103070F0703010 , 000000FE7C3810 , 080C0E0F0E0C08 
+19300 DATA 136 , 143 
+19310 DATA FFFFFFFFFFFFFFFF , C0BF60EAFFEA7FBF , 01F109ADFDA5F9F1 , , 00000010381 , 0000183C3C18 , 003C7E7E7E3C , 00387CFEFEFE7C38 
+19500 DATA -1 , -1 
+19600 DATA HELIUM , 0 , 2 , ZUSATZANTRIEBE , 1 , 10000 , TIERFANGGLEITER , 2 , 20000 , LASERKANONE , 1.5 , 3000 
+19610 DATA HELIUMTANK , 1 , 1500 , FISCHCONTAINER , .5 , 100 
+19700 DATA SEESPINNEN , 2 , 2 , 1 , 3 , 0 , .04 , 10 , 1 , EISWOELFE , 75 , 50 , 100 , 250 , 1 , 1.5 , .2 , 0 , VEGA-AFFEN , 8 , 15 , 30 , 10 , 0 , .3 , .4 , 0 
+19710 DATA WASSERMAEUSE , 800 , 850 , 610 , 900 , 1 , .2 , .1 , 1 , EISFROESCHE , 400 , 200 , 450 , 500 , 1 , .06 , .3 , 0 , SANDSPRINGER , 150 , 2.5 , 300 , 100 
+19720 DATA 1 , 1 , .1 , 0 , LANDKALMARE , 40 , 80 , 100 , 50 , 0 , 5 , 1 , 0 , FLUGFISCHE , 1 , 1 , 1 , 2 , 0 , .01 , 10 , 1 , POLARTIGER , 35 , 10 , 45 , 50 
+19730 DATA 1 , .9 , 2 , 0 , KUGELWUERMER , 4 , 10 , 15 , 20 , 0 , .1 , 1 , 0 
+20000 SUB BOX ( Y1 , X1 , Y2 , X2 , C )  :: CALL VCHAR ( Y1 + 1 , X1 , 104 , Y2 - Y1 - 1 )  :: CALL VCHAR ( Y2 , X1 , 105 )  :: CALL HCHAR ( Y2 , X1 + 1 , 106 , X2 - X1 - 1 ) 
+20010 CALL HCHAR ( Y1 , X1 , 107 )  :: CALL HCHAR ( Y1 , X1 + 1 , 108 , X2 - X1 - 1 )  :: CALL HCHAR ( Y1 , X2 , 109 ) 
+20020 CALL VCHAR ( Y1 + 1 , X2 , 110 , Y2 - Y1 - 1 )  :: CALL HCHAR ( Y2 , X2 , 111 )  :: FOR Y = Y1 + 1 TO Y2 - 1  :: CALL HCHAR ( Y , X1 + 1 , C , X2 - X1 - 1 )  :: NEXT Y 
+20025 SUBEND 
+20030 SUB D ( Y , X , A$ )  :: DISPLAY AT ( Y , X ) SIZE ( LEN ( A$ ) )  : A$  :: SUBEND 
+20040 SUB U ( Y , X , A )  :: DISPLAY AT ( Y , X ) SIZE ( 5 )  : USING "#####"  : A  :: SUBEND 
+20050 SUB C  :: FOR Y = 17 TO 23  :: CALL HCHAR ( Y , 3 , 32 , 16 )  :: NEXT Y  :: SUBEND 
+20055 SUB M ( Y , A$ )  :: CALL D ( Y , 9 - LEN ( A$ ) / 2 , A$ )  :: SUBEND 
+20060 SUB CHO ( Y , X , N , C )  :: C = 1 
+20070 CALL VCHAR ( Y + C - 1 , X , 135 ) 
+20080 CALL KEY ( 0 , K , S )  :: IF S < 1 THEN 20080ELSE IF K = 83 OR K = 68 THEN CALL VCHAR ( Y + C - 1 , X , 32 )  :: IF K = 83 THEN C = C - 1 - N * ( C = 1 ) ELSE C = C + 1 + N * ( C = N ) 
+20090 IF K < > 13 THEN 20070
+20100 SUBEND 
+20110 SUB TONE  :: FOR A = 1 TO 10  :: CALL SOUND ( 50 , INT ( RND * 500 ) + 330 , 4 )  :: NEXT A  :: SUBEND 
+20120 SUB WAIT  :: CALL HCHAR ( 23 , 16 , 135 , 3 ) 
+20130 CALL KEY ( 0 , K , S )  :: IF S < 1 THEN 20130
+20140 SUBEND 
+20150 SUB YN ( Y , X , A$ )  :: ACCEPT AT ( Y , X ) SIZE ( 1 ) VALIDATE ( "JN" )  : A$  :: SUBEND 
