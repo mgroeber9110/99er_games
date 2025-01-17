@@ -45,3 +45,13 @@ the grey background to avoid an audible "hum" that was created on my TV
 by high spatial frequencies.
 
 Loading and saving game states to tape is also supported.
+
+## Super Laser War
+
+<img src="laserwar.png" alt="Laser War screenshot" width=640 height=480>
+
+Platform game pitting the player against a single robot, mainly requiring
+a good timing of placing the shot at the right distance while running at
+the enemy. Movement can be controlled with user-defined keys for left,
+right and fire, and by using holes in the ground as well as an elevator
+for changing floors.
