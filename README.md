@@ -55,3 +55,23 @@ a good timing of placing the shot at the right distance while running at
 the enemy. Movement can be controlled with user-defined keys for left,
 right and fire, and by using holes in the ground as well as an elevator
 for changing floors.
+
+## Flugtag ("Airshow")
+
+<img src="flugtag.png" alt="Flugtag screenshot" width=640 height=480>
+
+This game simulates flying a gas balloon, which is controlled by dropping
+sandbags or letting off gas, while horizontal motion is purely controlled
+by random winds at different altitudes. The ballow has to be brought
+up and back down again to the place where it started, without crashing
+into obstacles. Jumping off with a parachute is possible to prevent
+disaster.
+
+This game was published in German "TI Revue" magazine, and it contains
+a number of cute little animations, such as the balloon being carried
+to the launchpad and the ambulance that picks up the pilot after the
+parachute has landed.
+
+The German instructions in the game had to be cut down a bit to avoid
+exceeding the size limit for loading TI Extended Basic files from
+disk (around 11858 bytes of file size).
